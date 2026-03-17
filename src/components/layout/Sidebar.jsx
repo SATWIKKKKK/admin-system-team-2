@@ -2,9 +2,7 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard,
   Users,
@@ -12,12 +10,13 @@ import {
   FolderKanban,
   CalendarClock,
   BarChart3,
+  Settings,
   LogOut,
   Menu,
   X,
-  Shield,
   Home,
   ChevronLeft,
+  Plus,
 } from "lucide-react";
 
 const adminLinks = [
@@ -32,7 +31,7 @@ const adminLinks = [
 
 const leadLinks = [
   { to: "/", icon: Home, label: "Home" },
-  { to: "/members", icon: Users, label: "My Domain" },
+  { to: "/members", icon: Users, label: "Members" },
   { to: "/attendance", icon: ClipboardCheck, label: "Attendance" },
   { to: "/meetings", icon: CalendarClock, label: "Meetings" },
 ];
@@ -58,27 +57,26 @@ export default function Sidebar() {
     .slice(0, 2);
 
   const sidebarContent = (
-    <div className="flex flex-col h-full">
-      {/* Logo */}
+    <div className="flex flex-col h-full" style={{ backgroundColor: "#111111" }}>
+      {/* Branding */}
       <div className={cn("flex items-center gap-3 px-4 py-5", collapsed && "justify-center px-2")}>
-        <div className="relative">
-          <div className="h-9 w-9 rounded-lg bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center shadow-lg shadow-purple-500/30">
-            <Shield className="h-5 w-5 text-white" />
-          </div>
-          <div className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-emerald-400 border-2 border-sidebar animate-pulse" />
+        <div className="h-10 w-10 rounded-full border-2 border-[#f59e0b] flex items-center justify-center shrink-0">
+          <span className="text-[#f59e0b] font-bold text-sm">&lt;&gt;</span>
         </div>
         {!collapsed && (
           <div className="flex flex-col">
-            <span className="font-bold text-foreground text-sm tracking-tight">AdminHub</span>
-            <span className="text-[10px] text-muted-foreground">Team Management</span>
+            <span className="font-bold text-white text-sm tracking-tight">TechClub</span>
+            <span className="text-[10px] text-[#f59e0b] uppercase tracking-widest font-semibold">
+              Admin Panel
+            </span>
           </div>
         )}
       </div>
 
-      <Separator className="opacity-50" />
+      <div className="mx-4 border-t border-white/10" />
 
       {/* Nav links */}
-      <nav className="flex-1 px-2 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1">
         {links.map((link) => (
           <NavLink
             key={link.to}
@@ -90,44 +88,104 @@ export default function Sidebar() {
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group",
                 collapsed && "justify-center px-2",
                 isActive
-                  ? "bg-primary/15 text-primary shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                  ? "bg-[#f59e0b]/20 text-[#f59e0b]"
+                  : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
               )
             }
           >
-            <link.icon className={cn("h-4.5 w-4.5 shrink-0 transition-transform duration-200 group-hover:scale-110")} />
+            <link.icon className="h-[18px] w-[18px] shrink-0" />
             {!collapsed && <span>{link.label}</span>}
           </NavLink>
         ))}
+
+        {/* Settings — separated at bottom of nav */}
+        <div className="!mt-auto pt-4">
+          <div className="border-t border-white/10 pt-3">
+            <NavLink
+              to="/settings"
+              onClick={() => setMobileOpen(false)}
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 group",
+                  collapsed && "justify-center px-2",
+                  isActive
+                    ? "bg-[#f59e0b]/20 text-[#f59e0b]"
+                    : "text-gray-400 hover:text-gray-200 hover:bg-white/5"
+                )
+              }
+            >
+              <Settings className="h-[18px] w-[18px] shrink-0" />
+              {!collapsed && <span>Settings</span>}
+            </NavLink>
+          </div>
+        </div>
       </nav>
 
-      <Separator className="opacity-50" />
+      {/* Bottom section */}
+      <div className={cn("px-3 pb-4 space-y-3", collapsed && "px-2")}>
+        {/* New Project button */}
+        {!collapsed && (
+          <button
+            onClick={() => navigate("/projects")}
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg bg-[#f59e0b] text-black text-sm font-semibold hover:bg-[#d97706] transition-colors cursor-pointer"
+          >
+            <Plus className="h-4 w-4" />
+            New Project
+          </button>
+        )}
+        {collapsed && (
+          <button
+            onClick={() => navigate("/projects")}
+            className="flex items-center justify-center w-full py-2.5 rounded-lg bg-[#f59e0b] text-black hover:bg-[#d97706] transition-colors cursor-pointer"
+            title="New Project"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        )}
 
-      {/* User section */}
-      <div className={cn("p-3", collapsed && "px-2")}>
-        <div className={cn(
-          "flex items-center gap-3 p-2 rounded-lg bg-muted/40",
-          collapsed && "justify-center p-1"
-        )}>
-          <Avatar className="h-8 w-8">
-            <AvatarFallback className="text-xs">{initials}</AvatarFallback>
-          </Avatar>
+        <div className="border-t border-white/10" />
+
+        {/* User info */}
+        <div className={cn("flex items-center gap-3", collapsed && "justify-center")}>
+          <div className="h-9 w-9 rounded-full bg-[#f59e0b]/20 flex items-center justify-center shrink-0">
+            <span className="text-[#f59e0b] text-xs font-bold">{initials}</span>
+          </div>
           {!collapsed && (
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-foreground truncate">{user?.name}</p>
-              <p className="text-[10px] text-muted-foreground truncate">{user?.role}</p>
+              <p className="text-sm font-medium text-white truncate">{user?.name}</p>
+              <p className="text-[10px] text-[#f59e0b] uppercase tracking-wider font-semibold truncate">
+                {user?.role === "Admin" ? "System Admin" : user?.role}
+              </p>
             </div>
           )}
-          <Button
-            variant="ghost"
-            size="icon"
-            className={cn("h-7 w-7 shrink-0 text-muted-foreground hover:text-destructive", collapsed && "h-6 w-6")}
+          {!collapsed && (
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                onClick={() => navigate("/settings")}
+                className="h-7 w-7 flex items-center justify-center rounded-md text-gray-400 hover:text-gray-200 hover:bg-white/10 transition-colors cursor-pointer"
+                title="Settings"
+              >
+                <Settings className="h-3.5 w-3.5" />
+              </button>
+              <button
+                onClick={handleLogout}
+                className="h-7 w-7 flex items-center justify-center rounded-md text-gray-400 hover:text-red-400 hover:bg-white/10 transition-colors cursor-pointer"
+                title="Logout"
+              >
+                <LogOut className="h-3.5 w-3.5" />
+              </button>
+            </div>
+          )}
+        </div>
+        {collapsed && (
+          <button
             onClick={handleLogout}
+            className="flex items-center justify-center w-full py-2 rounded-md text-gray-400 hover:text-red-400 hover:bg-white/10 transition-colors cursor-pointer"
             title="Logout"
           >
-            <LogOut className="h-3.5 w-3.5" />
-          </Button>
-        </div>
+            <LogOut className="h-4 w-4" />
+          </button>
+        )}
       </div>
     </div>
   );
@@ -136,41 +194,63 @@ export default function Sidebar() {
     <>
       {/* Mobile toggle */}
       <button
-        className="fixed top-4 left-4 z-50 lg:hidden p-2 rounded-lg bg-card border shadow-lg cursor-pointer"
+        className="fixed top-4 left-4 z-50 lg:hidden p-2 rounded-lg bg-[#111111] border border-white/10 shadow-lg cursor-pointer"
         onClick={() => setMobileOpen(!mobileOpen)}
       >
-        {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        {mobileOpen ? (
+          <X className="h-5 w-5 text-white" />
+        ) : (
+          <Menu className="h-5 w-5 text-white" />
+        )}
       </button>
 
       {/* Mobile overlay */}
-      {mobileOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden backdrop-blur-sm"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-black/60 lg:hidden backdrop-blur-sm"
+            onClick={() => setMobileOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-40 h-screen bg-sidebar border-r border-sidebar-border transition-all duration-300",
-          collapsed ? "w-[68px]" : "w-[240px]",
+          "fixed top-0 left-0 z-40 h-screen transition-all duration-300 overflow-hidden",
+          collapsed ? "w-[68px]" : "w-[250px]",
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         )}
+        style={{ backgroundColor: "#111111" }}
       >
         {sidebarContent}
 
         {/* Collapse toggle (desktop) */}
         <button
-          className="absolute -right-3 top-7 hidden lg:flex h-6 w-6 items-center justify-center rounded-full border bg-card shadow-md hover:bg-muted transition-colors cursor-pointer"
+          className="absolute -right-3 top-7 hidden lg:flex h-6 w-6 items-center justify-center rounded-full border border-white/20 shadow-md transition-colors cursor-pointer"
+          style={{ backgroundColor: "#1a1a1a" }}
           onClick={() => setCollapsed(!collapsed)}
         >
-          <ChevronLeft className={cn("h-3 w-3 transition-transform", collapsed && "rotate-180")} />
+          <ChevronLeft
+            className={cn(
+              "h-3 w-3 text-gray-400 transition-transform",
+              collapsed && "rotate-180"
+            )}
+          />
         </button>
       </aside>
 
       {/* Spacer */}
-      <div className={cn("hidden lg:block shrink-0 transition-all duration-300", collapsed ? "w-[68px]" : "w-[240px]")} />
+      <div
+        className={cn(
+          "hidden lg:block shrink-0 transition-all duration-300",
+          collapsed ? "w-[68px]" : "w-[250px]"
+        )}
+      />
     </>
   );
 }
