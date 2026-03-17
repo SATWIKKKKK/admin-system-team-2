@@ -222,7 +222,7 @@ export default function LoginPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Admin">Admin</SelectItem>
-                      <SelectItem value="Lead">Domain Lead</SelectItem>
+                      <SelectItem value="Member">Domain Member</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -257,7 +257,7 @@ export default function LoginPage() {
 
               <div className="mt-4 p-3 rounded-lg bg-muted/50 border border-dashed border-border">
                 <p className="text-[11px] text-muted-foreground text-center">
-                  💡 <strong>Demo:</strong> Enter any email & password. Choose "Admin" for full access or "Domain Lead" for limited access.
+                  💡 <strong>Demo:</strong> Enter any email & password. Choose "Admin" for full access or "Domain Member" for limited access.
                 </p>
               </div>
             </CardContent>

@@ -30,10 +30,11 @@ const adminLinks = [
   { to: "/analytics", icon: BarChart3, label: "Analytics" },
 ];
 
-const leadLinks = [
+const memberLinks = [
   { to: "/", icon: Home, label: "Home" },
   { to: "/members", icon: Users, label: "My Domain" },
   { to: "/attendance", icon: ClipboardCheck, label: "Attendance" },
+  { to: "/projects", icon: FolderKanban, label: "My Projects" },
   { to: "/meetings", icon: CalendarClock, label: "Meetings" },
 ];
 
@@ -43,7 +44,7 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const links = isAdmin ? adminLinks : leadLinks;
+  const links = isAdmin ? adminLinks : memberLinks;
 
   const handleLogout = () => {
     logout();
