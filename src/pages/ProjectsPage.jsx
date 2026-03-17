@@ -119,12 +119,12 @@ export default function ProjectsPage() {
       </motion.div>
 
       {/* Tabs */}
-      <motion.div variants={itemVariants} className="flex gap-6 border-b border-white/10">
+      <motion.div variants={itemVariants} className="flex gap-4 sm:gap-6 border-b border-white/10 overflow-x-auto">
         {TABS.map((tab) => (
           <button
             key={tab}
             onClick={() => handleTabChange(tab)}
-            className={`pb-3 text-sm font-medium transition-colors relative ${
+            className={`pb-3 text-sm font-medium transition-colors relative whitespace-nowrap shrink-0 ${
               activeTab === tab ? "text-amber-500" : "text-gray-400 hover:text-gray-300"
             }`}
           >

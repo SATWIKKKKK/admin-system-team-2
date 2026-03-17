@@ -113,7 +113,7 @@ export default function AttendancePage() {
       </motion.div>
 
       {/* Controls */}
-      <motion.div variants={itemVariants} className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-end">
+      <motion.div variants={itemVariants} className="flex flex-col md:flex-row gap-4 items-stretch md:items-end">
         <div className="flex-1">
           <label className="text-xs font-semibold text-amber-500 uppercase tracking-wider mb-1.5 block">Select Meeting</label>
           <div className="relative">

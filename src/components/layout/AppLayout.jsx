@@ -22,9 +22,9 @@ export default function AppLayout() {
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-auto">
         {/* Top Bar */}
-        <header className="sticky top-0 z-30 flex flex-col sm:flex-row items-center gap-3 sm:gap-4 px-4 lg:px-8 py-3 bg-[#111111] border-b border-white/10">
+        <header className="sticky top-0 z-30 flex items-center gap-3 sm:gap-4 px-4 lg:px-8 py-3 bg-[#111111] border-b border-white/10">
           {/* Search */}
-          <div className="relative w-full sm:w-[40%] ml-8 sm:ml-0">
+          <div className="relative flex-1 min-w-0 ml-10 lg:ml-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
             <input
               type="text"
@@ -34,7 +34,7 @@ export default function AppLayout() {
           </div>
 
           {/* Right side */}
-          <div className="flex items-center gap-3 sm:gap-4 sm:ml-auto">
+          <div className="flex items-center gap-3 sm:gap-4 ml-auto shrink-0">
             <button className="p-2 rounded-lg text-gray-400 hover:text-[#f59e0b] hover:bg-white/5 transition-colors relative cursor-pointer" title="Notifications">
               <Bell className="h-5 w-5" />
               <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[#f59e0b]" />
